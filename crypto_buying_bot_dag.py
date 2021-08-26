@@ -191,8 +191,7 @@ default_args = {
     'owner': 'leviob',
     'depends_on_past': False,
     'retries': 50,
-    'retry_delay': timedelta(seconds=10),
-    'catchup':False
+    'retry_delay': timedelta(seconds=10)
 }
 
 dag = DAG(
