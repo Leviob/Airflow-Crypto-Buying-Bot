@@ -32,6 +32,7 @@ def determine_value():
 
         float: The most recent asking price
     '''
+    # TODO: Use asincio here to call multiple apis asyncronously
     response = requests.get(f'https://api.sandbox.gemini.com/v2/candles/{SYMBOL}/6hr')  # Returns 60 days worth of 6 hour candles
     crypto_candle_data = response.json()
     response = requests.get(f'https://api.sandbox.gemini.com/v1/pubticker/{SYMBOL}') # Returns current ticker info like bid, ask and last
@@ -77,7 +78,7 @@ def place_order(**kwargs):
         logging.info(f'the current sigmoid value is {sigmoid}')
     logging.info(f'I\'m purchasing {purchase_amount_in_usd} USD worth because the value is {value_of_current_price}')
 
-    # Get current ask price
+    # Get an updated current ask price
     response = requests.get(f'https://api.sandbox.gemini.com/v1/pubticker/{SYMBOL}')
     current_ask_price = min(float(response.json()['ask']), preliminary_ask_price) # If price has gone down durring code execution, use lower price
     buy_order_price = current_ask_price - 1 # One dollar less than ask
