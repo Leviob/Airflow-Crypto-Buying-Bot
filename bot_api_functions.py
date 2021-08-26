@@ -95,7 +95,6 @@ def get_trade_history(number_of_trades=None):
             if new_trades: # If returned list is not empty
                 all_trades = new_trades + all_trades # Ordered such as to maintain descending timestamp order
             else:
-                print(f'there are a total of {len(all_trades)} trades')
                 return all_trades
 
     else: # Else return the number_of_trades
