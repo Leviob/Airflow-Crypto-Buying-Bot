@@ -24,6 +24,9 @@ To run this automated purchasing bot, the following is required:
 - A Gemini exchange account setup for use with the API
     - Details on setting up the API is on their website: https://docs.gemini.com/rest-api/#introduction 
 - A server running Apache Airflow 
-    - Airflow must be configured with the Gemini API key variables (these can be imported to Airflow using `variables.json`)
+    - Airflow must be configured with the Gemini API key variables 
+    - The API keys can be imported to Airflow using `variables.json`)
+- An SMTP host must be initialized and configured in the `airflow.cfg` file
+    - The chosen email address can also be imported to Airflow using `variables.json`
 
 The constant variables in `crypto_buying_bot_dag.py` can be adjusted to the desired specifications. 
