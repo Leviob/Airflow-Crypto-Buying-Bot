@@ -137,7 +137,8 @@ def count_open_orders():
     open_orders = get_active_orders()
     open_order_ids = set()
     for order in open_orders:
-        open_order_ids.add(order['order_id'])
+        if 'client_order_id' in order and order['client_order_id'][:6] == 'bot_v1':
+            open_order_ids.add(order['order_id'])
     return len(open_order_ids)
 
 def analyze_trades(**kwargs):
