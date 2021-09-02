@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import math
 from pprint import pprint
 from bot_api_functions import place_limit_order, get_active_orders, get_trade_history
+from airflow.models import Variable
+
 
 SYMBOL = 'ETHUSD'
 GEMINI_CRYPTO_TRADING_MINIMUM = 0.001 # This is the minimum trade amount for this symbol that Gemini specifies here: 
@@ -16,6 +18,7 @@ GOOD_RATIO = 0.85 # Ratio of current price and average price that indicates a go
 POOR_RATIO = 1.2 # Ratio of current price and average price that indicates a poor price
 DANGER_RATIO = 1.5 # Ratio of current price and average price that indicates a dangerously high price
 LENGTH_OF_PRICE_AVERAGE = 100 # candle period is 6hr, so 100 periods is 25 days.
+EMAIL = Variable.get('email_address')
 
 def determine_value():
     '''
@@ -71,7 +74,7 @@ def place_order(**kwargs):
         purchase_amount_in_usd = MAX_PURCHASE_AMOUNT
     else:
         # When the value is close to fair, the amount to purchase is decided using a sigmoid function with 
-        # Value_of_current_price as input
+        # value_of_current_price as input
         sigmoid =  1 / (1 + math.exp(-10*(value_of_current_price - 0.5)))
         purchase_amount_in_usd = round(MIN_PURCHASE_AMOUNT + ((MAX_PURCHASE_AMOUNT - MIN_PURCHASE_AMOUNT) * sigmoid), 2)
 
@@ -80,7 +83,7 @@ def place_order(**kwargs):
 
     # Get an updated current ask price
     response = requests.get(f'https://api.sandbox.gemini.com/v1/pubticker/{SYMBOL}')
-    current_ask_price = min(float(response.json()['ask']), preliminary_ask_price) # If price has gone down durring code execution, use lower price
+    current_ask_price = min(float(response.json()['ask']), preliminary_ask_price) # If price has changed durring code execution, use lower price
     buy_order_price = current_ask_price - 1 # One dollar less than ask
     purchase_amount_in_crypto = round(purchase_amount_in_usd/buy_order_price,6)
 
@@ -164,7 +167,7 @@ def analyze_trades(**kwargs):
     bot_order_count = len(bot_trade_history)
 
     '''
-    Calculate Theoretical return ising DCA strategy to compare results.
+    Calculate Theoretical return using DCA strategy to compare results.
     This calculation for average spent is probably bogus because the list of purchase prices 
     is less than a dollar for some trades. It will likely be much more accurate outside the sandbox.'''
     if list_of_purchase_prices:
@@ -193,7 +196,8 @@ default_args = {
     'owner': 'leviob',
     'depends_on_past': False,
     'retries': 50,
-    'retry_delay': timedelta(seconds=10)
+    'retry_delay': timedelta(seconds=10),
+    'email': EMAIL
 }
 
 dag = DAG(
