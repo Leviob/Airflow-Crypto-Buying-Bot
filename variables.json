@@ -1,4 +1,5 @@
 {
-    "gemini_api_key": "account-********",
-    "gemini_api_secret": "********"
+    "email_address": "your@email.com",
+    "gemini_api_key": "account-********************",
+    "gemini_api_secret": "****************************"
 }
