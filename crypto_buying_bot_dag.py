@@ -177,11 +177,17 @@ def analyze_trades(**kwargs):
     dca_crypto_purchased = 0
     for price in list_of_purchase_prices:
         dca_crypto_purchased += average_spent / price
-    dca_percent_return = (dca_crypto_purchased * ask_price) / total_usd_spent
+    if total_usd_spent == 0:
+        dca_percent_return = 0
+        percent_return = 0
+    else:
+        dca_percent_return = (dca_crypto_purchased * ask_price) / total_usd_spent
+        percent_return = (total_crypto_qty_purchased * ask_price) / total_usd_spent
+    
+    
     # TODO: tally amount spent and see if any hidden fees are being removed from transactions
     # total_fees_calculated = 
 
-    percent_return = (total_crypto_qty_purchased * ask_price) / total_usd_spent
 
     logging.info(f'My percent return on my investments using this bot is: {percent_return}')
     logging.info(f'My percent return had I used a Dollar Cost Averaging strategy is approximately: {dca_percent_return}')
