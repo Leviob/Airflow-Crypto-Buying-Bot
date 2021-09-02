@@ -119,8 +119,10 @@ def find_filled_orders():
 
     Returns: a list of dictionaries in json format corresponding to each order.
     '''
-    # Get entire trade history each time this is run. This can be made more efficient by only looking at 
-    #   some recent trades and appending / amending the values. 
+    '''
+    Get entire trade history each time this is run. This can be made more efficient by only looking at 
+      some recent trades and appending the values in a database.
+    '''
     trade_history = get_trade_history()
     bot_trade_history = []
     for order in trade_history:
@@ -139,9 +141,8 @@ def analyze_trades(**kwargs):
     '''
     Calculates basic metrics from completed orders.
 
-    Metrics like total USD spent, total crypto purchased, and
-    percent return made using this strategy are calculated 
-    and printed.
+    Metrics like total USD spent, total crypto purchased, and percent return
+        made using this strategy are calculated and printed.
     '''
     ti = kwargs['ti']
     bot_trade_history = ti.xcom_pull(task_ids='find_filled_orders_task')
@@ -162,9 +163,10 @@ def analyze_trades(**kwargs):
         total_fees_reported += float(order['fee_amount'])
     bot_order_count = len(bot_trade_history)
 
-    # Calculate Theoretical return ising DCA strategy to compare results.
-    # This calculation for average spent is probably bogus because the list of purchase prices 
-    # is less than a dollar for some trades. It will likely be much more accurate outside the sandbox. 
+    '''
+    Calculate Theoretical return ising DCA strategy to compare results.
+    This calculation for average spent is probably bogus because the list of purchase prices 
+    is less than a dollar for some trades. It will likely be much more accurate outside the sandbox.'''
     if list_of_purchase_prices:
         average_spent = total_usd_spent/len(list_of_purchase_prices)
     else:
@@ -185,7 +187,7 @@ def analyze_trades(**kwargs):
     logging.info(f'{total_crypto_qty_purchased} in {SYMBOL} purchased.')
     logging.info(f'{total_usd_spent} in usd spent (approximated).')
     logging.info(f'{total_fees_reported} paid in fees.')   
-    # pprint(bot_trade_history)
+    # pprint(bot_trade_history) # For debugging, print all trades
 
 default_args = {
     'owner': 'leviob',
