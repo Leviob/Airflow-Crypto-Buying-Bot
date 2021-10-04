@@ -19,6 +19,9 @@ The bot is composed of several tasks which make up a DAG, pictured below.
 
 The first task, `determine_value_task`, looks at the current and past prices to ascribe a "value" to the current price. If the price is high, it will have a low value; if the price is low, it will have a high value. The value is calculated by comparing the current price to the average price over the past several days. The next task, `place_order_task`, places an order for an amount of cryptocurrency based on the determined value. The limits of the amounts to purchase and the length of days to average are defined by constants in `crypto_buying_bot_dag.py`. Next, `find_filled_orders_task` will collect all the orders placed by the bot and `count_open_orders_task` will count the orders that have yet to fill. The resulting information will be used by `analyze_trades_task` to calculate metrics on the orders. These metrics include the number of orders placed, the return, and the theoretical return if the same amount had been invested using the simpler DCA strategy. 
 
+## Performance
+After running this bot for one month on a 3-day interval, it executed 11 orders. The return is currently 5% higher than the theoretical return using a DCA strategy. 
+
 ## How to Run
 To run this automated purchasing bot, the following is required:
 - A Gemini exchange account setup for use with the API
