@@ -22,7 +22,7 @@ def private_api_call(endpoint, payload):
 
     request_headers = { 'Content-Type': 'text/plain',
                         'Content-Length': '0',
-                        'X-GEMINI-APIKEY': gemini_api_key, 
+                        'X-GEMINI-APIKEY': gemini_api_key,
                         'X-GEMINI-PAYLOAD': b64,
                         'X-GEMINI-SIGNATURE': signature,
                         'Cache-Control': 'no-cache' }
@@ -30,6 +30,7 @@ def private_api_call(endpoint, payload):
     response = requests.post(url,
                             data=None,
                             headers=request_headers)
+    response.raise_for_status()
     return response.json()
 
 def place_limit_order(symbol, purchase_amount_in_crypto, buy_order_price):
