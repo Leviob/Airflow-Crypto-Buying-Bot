@@ -9,8 +9,8 @@ from bot_api_functions import place_limit_order, get_active_orders, get_trade_hi
 from airflow.models import Variable
 
 
-SYMBOL = 'ETHUSD'
-GEMINI_CRYPTO_TRADING_MINIMUM = 0.001 # This is the minimum trade amount for this symbol that Gemini specifies here: 
+SYMBOL = 'BTCUSD'
+GEMINI_CRYPTO_TRADING_MINIMUM = 0.00001 # This is the minimum trade amount for this symbol that Gemini specifies here: 
     # https://support.gemini.com/hc/en-us/articles/4401824250267-Are-there-trading-minimums- 
 MIN_PURCHASE_AMOUNT = 5 # The minimum amount the bot will purchase
 MAX_PURCHASE_AMOUNT = 40 # The maximum amount the bot will purchase
@@ -129,7 +129,7 @@ def find_filled_orders():
     trade_history = get_trade_history()
     bot_trade_history = []
     for order in trade_history:
-        if 'client_order_id' in order and order['client_order_id'][:6] == 'bot_v1':
+        if 'client_order_id' in order and order['client_order_id'][:6] == 'bot_v2':
             bot_trade_history.append(order)
     return bot_trade_history
 
@@ -137,7 +137,7 @@ def count_open_orders():
     open_orders = get_active_orders()
     open_order_ids = set()
     for order in open_orders:
-        if 'client_order_id' in order and order['client_order_id'][:6] == 'bot_v1':
+        if 'client_order_id' in order and order['client_order_id'][:6] == 'bot_v2':
             open_order_ids.add(order['order_id'])
     return len(open_order_ids)
 
@@ -202,8 +202,8 @@ def analyze_trades(**kwargs):
 default_args = {
     'owner': 'leviob',
     'depends_on_past': False,
-    'retries': 50,
-    'retry_delay': timedelta(seconds=10),
+    'retries': 2,
+    'retry_delay': timedelta(seconds=60),
     'email': EMAIL
 }
 
@@ -211,9 +211,9 @@ dag = DAG(
     'crypto_dva_bot',
     'Buy crypto regularly using Dollar Value Averaging strategy',
     # Start now
-    start_date=datetime.now() - timedelta(days=3),
-    # Run every 3 days
-    schedule_interval=timedelta(days=3),
+    start_date=datetime.now() - timedelta(days=1),
+    # Run every 1 day
+    schedule_interval=timedelta(days=1),
     default_args=default_args,
     catchup=False # necessary for starting at datetime.now(), otherwise starts at end of last run
 )
