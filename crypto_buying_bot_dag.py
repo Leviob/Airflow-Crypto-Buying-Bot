@@ -35,7 +35,7 @@ def determine_value():
 
         float: The most recent asking price
     '''
-    # TODO: Use asincio here to call multiple apis asyncronously
+
     response = requests.get(f'https://api.sandbox.gemini.com/v2/candles/{SYMBOL}/6hr')  # Returns 60 days worth of 6 hour candles
     crypto_candle_data = response.json()
     response = requests.get(f'https://api.sandbox.gemini.com/v1/pubticker/{SYMBOL}') # Returns current ticker info like bid, ask and last
@@ -50,7 +50,7 @@ def determine_value():
     average price: {average_price}''')
 
     logging.debug(f'avg:{average_price} price/avg: {price_rel_to_avg}')
-    if price_rel_to_avg > DANGER_RATIO or (preliminary_ask_price - float(response.json()['bid']) > 10): # Asking price is abnormally high 
+    if price_rel_to_avg > DANGER_RATIO: # Asking price is abnormally high 
         raise Exception('Asking price is too high relative to the average or the current bid.')
 
     # Else, price is fair
