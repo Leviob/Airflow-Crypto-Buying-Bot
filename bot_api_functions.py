@@ -13,7 +13,7 @@ def private_api_call(endpoint, payload):
     '''
     Calls the Gemini private api using the passed endpoint and payload variables.
     '''
-    base_url = 'https://api.gemini.com'
+    base_url = 'https://api.sandbox.gemini.com'
     url = base_url + endpoint
     payload['nonce'] = str(int(time.time()*1000))
     encoded_payload = json.dumps(payload).encode()
@@ -37,12 +37,12 @@ def place_limit_order(symbol, purchase_amount_in_crypto, buy_order_price):
     Places a new buy limit order.
 
     Requires the symbol, quantity of crypto, and desired purchase price
-    to be included as arguments. 
+    to be included as arguments.
 
     Returns: A dictionary of the response in json format.
     '''
     endpoint = '/v1/order/new'
-    client_order_id = f'bot_v1_{datetime.now().strftime("%Y-%m-%d_%H:%M")}'
+    client_order_id = f'bot_v2_{datetime.now().strftime("%Y-%m-%d_%H:%M")}'
     payload = {
     'request': '/v1/order/new',
         'symbol': symbol,
@@ -51,7 +51,7 @@ def place_limit_order(symbol, purchase_amount_in_crypto, buy_order_price):
         'price': buy_order_price,
         'side': 'buy',
         'type': 'exchange limit',
-        'options': ['maker-or-cancel'] 
+        'options': ['maker-or-cancel']
     }
 
     return private_api_call(endpoint, payload)
