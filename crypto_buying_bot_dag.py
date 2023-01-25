@@ -4,7 +4,7 @@ from airflow.operators.python import PythonOperator
 import requests
 from datetime import datetime, timedelta
 import math
-from pprint import pprint
+# from pprint import pprint
 from bot_api_functions import place_limit_order, get_active_orders, get_trade_history
 from airflow.models import Variable
 
@@ -50,7 +50,7 @@ def determine_value():
     average price: {average_price}''')
 
     logging.debug(f'avg:{average_price} price/avg: {price_rel_to_avg}')
-    if price_rel_to_avg > DANGER_RATIO: # Asking price is abnormally high 
+    if price_rel_to_avg > DANGER_RATIO: # Asking price is abnormally high
         raise Exception('Asking price is too high relative to the average or the current bid.')
 
     # Else, price is fair
@@ -97,7 +97,7 @@ def place_order(**kwargs):
 
     # This is where the order gets placed
     json_response = place_limit_order(SYMBOL, purchase_amount_in_crypto, buy_order_price)
-    logging.debug(json_response)    
+    logging.debug(json_response)
     # print(f'The current asking price is {current_ask_price}')
     # print(f'The current value of this coin is {value_of_current_price}')
 
