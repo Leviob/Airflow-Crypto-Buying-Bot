@@ -13,7 +13,7 @@ def private_api_call(endpoint, payload):
     '''
     Calls the Gemini private api using the passed endpoint and payload variables.
     '''
-    base_url = 'https://api.sandbox.gemini.com'
+    base_url = 'https://api.gemini.com'
     url = base_url + endpoint
     payload['nonce'] = str(int(time.time()*1000))
     encoded_payload = json.dumps(payload).encode()
